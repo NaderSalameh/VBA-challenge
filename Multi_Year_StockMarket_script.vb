@@ -55,17 +55,17 @@ Sub StockMarket()
 
                 '-.-- Color Format for the Yearly Change--.-
                 If YearlyChange > 0 Then
-                        ws.Cells(SummaryRow, 10).Interior.ColorIndex = 4 ' green
+                    ws.Cells(SummaryRow, 10).Interior.ColorIndex = 4 ' green
                 Else
-                        ws.Cells(SummaryRow, 10).Interior.ColorIndex = 3 ' red
+                    ws.Cells(SummaryRow, 10).Interior.ColorIndex = 3 ' red
                 End If
 
 
                 ' -.--Percentage Change--.-
                 If YearClose <> 0 And YearOpen <> 0 Then
-                        ws.Cells(SummaryRow, 11).Value = FormatPercent((YearClose - YearOpen) / YearOpen, , vbTrue)
+                    ws.Cells(SummaryRow, 11).Value = FormatPercent((YearClose - YearOpen) / YearOpen, , vbTrue)
                 Else
-                        ws.Cells(SummaryRow, 11).Value = FormatPercent(0, , vbTrue)
+                    ws.Cells(SummaryRow, 11).Value = FormatPercent(0, , vbTrue)
                 End If
 
 
