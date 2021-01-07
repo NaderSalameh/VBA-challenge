@@ -32,90 +32,88 @@ Sub StockMarket()
 
             Else
 
-            For Col = 1 To LastCol
 
-                If ws.Cells(Row, 1).Value <> PrevTicker Then
+            If ws.Cells(Row, 1).Value <> PrevTicker Then
 
-                    '  --.---------------.---------------.---------------.-----
-                    '   BEGIN CREATING THE SUMMARY FOR THE PREVIOUS STOCK
-                    '  --.---------------.---------------.---------------.-----
+                '  --.---------------.---------------.---------------.-----
+                '   BEGIN CREATING THE SUMMARY FOR THE PREVIOUS STOCK
+                '  --.---------------.---------------.---------------.-----
 
-                    ' -.--Updating the summary row--.-
-                    SummaryRow = SummaryRow + 1
-
-
-                    ' -.--Ticker Symbol--.-
-                     ws.Cells(SummaryRow, 9).Value = PrevTicker
+                ' -.--Updating the summary row--.-
+                SummaryRow = SummaryRow + 1
 
 
-                    '-.--Yearly Change--.-
-                    YearClose = ws.Cells(Row - 1, 6).Value
-                    YearlyChange = (YearClose - YearOpen)
-                    ws.Cells(SummaryRow, 10).Value = YearlyChange
+                ' -.--Ticker Symbol--.-
+                 ws.Cells(SummaryRow, 9).Value = PrevTicker
 
 
-                    '-.-- Color Format for the Yearly Change--.-
-                    If YearlyChange > 0 Then
+                '-.--Yearly Change--.-
+                YearClose = ws.Cells(Row - 1, 6).Value
+                YearlyChange = (YearClose - YearOpen)
+                ws.Cells(SummaryRow, 10).Value = YearlyChange
+
+
+                '-.-- Color Format for the Yearly Change--.-
+                If YearlyChange > 0 Then
                         ws.Cells(SummaryRow, 10).Interior.ColorIndex = 4 ' green
-                    Else
+                Else
                         ws.Cells(SummaryRow, 10).Interior.ColorIndex = 3 ' red
-                    End If
+                End If
 
 
-                    ' -.--Percentage Change--.-
-                    If YearClose <> 0 And YearOpen <> 0 Then
+                ' -.--Percentage Change--.-
+                If YearClose <> 0 And YearOpen <> 0 Then
                         ws.Cells(SummaryRow, 11).Value = FormatPercent((YearClose - YearOpen) / YearOpen, , vbTrue)
-                    Else
+                Else
                         ws.Cells(SummaryRow, 11).Value = FormatPercent(0, , vbTrue)
-                    End If
+                End If
 
 
-                    ' -.--Total Stock Volume--.-
-                    ws.Cells(SummaryRow, 12).Value = VolAccum
+                ' -.--Total Stock Volume--.-
+                ws.Cells(SummaryRow, 12).Value = VolAccum
 
-                    '  --.---------------.---------------.---------------.-------
-                    '   DOING A RESET AND STARTING CALCS FOR THE CURRENT STOCK
-                    '  --.---------------.---------------.---------------.-------
+                '  --.---------------.---------------.---------------.-------
+                '   DOING A RESET AND STARTING CALCS FOR THE CURRENT STOCK
+                '  --.---------------.---------------.---------------.-------
 
-                    YearClose = 0
-                    VolAccum = 0
-                    YearOpen = ws.Cells(Row, 3).Value
-                    PrevTicker = ws.Cells(Row, 1).Value
-                    VolAccum = VolAccum + ws.Cells(Row, 7).Value
-
-                    End If
-
-                Next Col
+                YearClose = 0
+                VolAccum = 0
+                YearOpen = ws.Cells(Row, 3).Value
+                PrevTicker = ws.Cells(Row, 1).Value
+                VolAccum = VolAccum + ws.Cells(Row, 7).Value
 
             End If
+                    
 
-        Next Row
+        End If
 
-        ' --.---------------.---------------.---------------.---------------.---------------
-        '    CREATING THE SECOND SUMMARY
-        ' --.---------------.---------------.---------------.---------------.---------------
+    Next Row
 
-        '  --.--Creating the labels for Second Summary--.--
-        ws.Cells(2, 15).Value = "Greatest % Increase"
-        ws.Cells(3, 15).Value = "Greatest % Decrease"
-        ws.Cells(4, 15).Value = "Greatest Total Volume"
-        ws.Cells(1, 16).Value = "Ticker"
-        ws.Cells(1, 17).Value = "Value"
+    ' --.---------------.---------------.---------------.---------------.---------------
+    '    CREATING THE SECOND SUMMARY
+    ' --.---------------.---------------.---------------.---------------.---------------
 
-
-        ' -.-- greatest % increase with corresponding ticker
-        ws.Cells(2, 17).Value = FormatPercent(WorksheetFunction.Max(ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11))), , vbTrue)
-        ws.Cells(2, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(2, 17).Value, ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11)), 0))
+    '  --.--Creating the labels for Second Summary--.--
+    ws.Cells(2, 15).Value = "Greatest % Increase"
+    ws.Cells(3, 15).Value = "Greatest % Decrease"
+    ws.Cells(4, 15).Value = "Greatest Total Volume"
+    ws.Cells(1, 16).Value = "Ticker"
+    ws.Cells(1, 17).Value = "Value"
 
 
-         '-.-- greatest % decrease with corresponding ticker
-        ws.Cells(3, 17).Value = FormatPercent(WorksheetFunction.Min(ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11))), , vbTrue)
-        ws.Cells(3, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(3, 17).Value, ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11)), 0))
+    ' -.-- greatest % increase with corresponding ticker
+    ws.Cells(2, 17).Value = FormatPercent(WorksheetFunction.Max(ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11))), , vbTrue)
+    ws.Cells(2, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(2, 17).Value, ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11)), 0))
 
 
-        ' Greatest total Volume with corresponding ticker
-        ws.Cells(4, 17).Value = WorksheetFunction.Max(ws.Range(ws.Cells(2, 12), ws.Cells(LastRow, 12)))
-        ws.Cells(4, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(4, 17).Value, ws.Range(ws.Cells(2, 12), ws.Cells(LastRow, 12)), 0))
+    '-.-- greatest % decrease with corresponding ticker
+    ws.Cells(3, 17).Value = FormatPercent(WorksheetFunction.Min(ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11))), , vbTrue)
+    ws.Cells(3, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(3, 17).Value, ws.Range(ws.Cells(2, 11), ws.Cells(LastRow, 11)), 0))
+
+
+    ' Greatest total Volume with corresponding ticker
+    ws.Cells(4, 17).Value = WorksheetFunction.Max(ws.Range(ws.Cells(2, 12), ws.Cells(LastRow, 12)))
+    ws.Cells(4, 16).Value = WorksheetFunction.Index(ws.Range(ws.Cells(2, 9), ws.Cells(LastRow, 9)), WorksheetFunction.Match(ws.Cells(4, 17).Value, ws.Range(ws.Cells(2, 12), ws.Cells(LastRow, 12)), 0))
 
 
 
